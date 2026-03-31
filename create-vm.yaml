@@ -7,6 +7,8 @@
       command: "cp {{ base_image_path }} /var/lib/libvirt/images/{{ vm_name }}.qcow2"
       args:
         creates: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+    - name: Extend disk size
+      command: "qemu-img resize /var/lib/libvirt/images/{{ vm_name }}.qcow2 +30G"
     - name: Create a VM
       community.libvirt.virt_install:
         name: "{{ vm_name }}"
@@ -22,8 +24,6 @@
         graphics:
           type: spice
       register: vm_info
-    - name: Extend disk size
-      command: "qemu-img resize /var/lib/libvirt/images/{{ vm_name }}.qcow2 +30G" 
     - name: Get vm ip address
       shell: "virsh domifaddr {{ vm_name }} | awk 'NR==3{print $4}' | cut -d'/' -f1"
       register: vm_ip
