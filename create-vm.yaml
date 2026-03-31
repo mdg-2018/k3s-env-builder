@@ -68,7 +68,7 @@
     - name: Extend an existing partition to fill all available space
       community.general.parted:
         device: /dev/vda
-        number: 2
+        number: 5
         part_end: "100%"
         resize: true
         state: present
