@@ -1,13 +1,10 @@
 - hosts: localhost
   vars_files:
     - config.json
-  vars:
-    vm_name: unnamed-k8s-vm
-    source_disk: /var/lib/libvirt/images/debian13-base.qcow2
   become: true
   tasks:
     - name: Create a copy of the base disk image
-      command: "cp {{ source_disk }} /var/lib/libvirt/images/{{ vm_name }}.qcow2"
+      command: "cp {{ base_image_path }} /var/lib/libvirt/images/{{ vm_name }}.qcow2"
       args:
         creates: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
     - name: Create a VM

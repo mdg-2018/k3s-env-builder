@@ -2,5 +2,7 @@
     "new_vm_root_pwd": "",
     "cpu_cores": 4,
     "memory_size": 8192,
-    "osinfo_name": "debian13"
+    "osinfo_name": "debian13",
+    "base_image_path": "",
+    "vm_name": "unnamed-k8s-vm"
 }
