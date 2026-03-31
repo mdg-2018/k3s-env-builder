@@ -3,7 +3,7 @@ VMIP=$1
 VM_NAME=$2
 
 # Get remote kubeconfig
-scp matt@$VMIP:/home/matt/k3s-kubeconfig.yaml /home/matt/.kube/script-tmpconfig
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null matt@$VMIP:/home/matt/k3s-kubeconfig.yaml /home/matt/.kube/script-tmpconfig
 
 # Backup current kubeconfig
 cp /home/matt/.kube/config /home/matt/.kube/config.script.bak

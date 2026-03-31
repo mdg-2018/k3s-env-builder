@@ -22,6 +22,8 @@
         graphics:
           type: spice
       register: vm_info
+    - name: Extend disk size
+      command: "qemu-img resize /var/lib/libvirt/images/{{ vm_name }}.qcow2 +30G" 
     - name: Get vm ip address
       shell: "virsh domifaddr {{ vm_name }} | awk 'NR==3{print $4}' | cut -d'/' -f1"
       register: vm_ip
@@ -46,12 +48,41 @@
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_become_password: "{{ new_vm_root_pwd }}"
   tasks:
+    - name: Change hostname
+      hostname:
+        name: "{{ vm_name }}"
     - name: Install prerequisites
       apt:
         pkg:
           - curl
           - vim
+          - parted
         update_cache: yes
+    - name: Extend an existing partition to fill all available space
+      community.general.parted:
+        device: /dev/vda
+        number: 2
+        part_end: "100%"
+        resize: true
+        state: present
+    - name: Extend an existing partition to fill all available space
+      community.general.parted:
+        device: /dev/vda
+        number: 2
+        part_end: "100%"
+        resize: true
+        state: present
+    - name: Extending the Volume Group
+      community.general.lvg:
+        vg: debian-base-vg
+        pvs: /dev/vda5
+        pvresize: yes
+    - name: Extend logical volume to account for larger partition
+      community.general.lvol:
+        vg: debian-base-vg
+        lv: root
+        size: +100%FREE
+        resizefs: true
     - name: Install k9s
       apt:
         deb: "https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb"
