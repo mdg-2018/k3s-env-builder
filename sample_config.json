@@ -1,0 +1,6 @@
+{
+    "new_vm_root_pwd": "",
+    "cpu_cores": 4,
+    "memory_size": 8192,
+    "osinfo_name": "debian13"
+}

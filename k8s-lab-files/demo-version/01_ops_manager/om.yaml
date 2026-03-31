@@ -1,0 +1,30 @@
+---
+apiVersion: mongodb.com/v1
+kind: MongoDBOpsManager
+metadata:
+  name: ops-manager
+  namespace: mongodb
+spec:
+  replicas: 1
+  version: 8.0.16
+  # TODO: set the reference to the secret you created for the admin user
+  adminCredentials: om-admin-user
+  externalConnectivity:
+  # TODO: set your external connectivity option here
+    type: LoadBalancer
+  applicationDatabase:
+  # TODO: specify number of nodes in the replica set that will be used as the application database for Ops Manager
+    members: 3
+    version: 8.0.16
+  
+  # These settings can be configured in the Ops Manager UI after installation
+  # but if we define them here we save some initial setup time.
+  configuration:
+    mms.ignoreInitialUiSetup: "true"
+    mms.adminEmailAddr: admin@example.com
+    mms.fromEmailAddr: admin@example.com
+    mms.mail.hostname: mail.example.com
+    mms.mail.port: "465"
+    mms.mail.ssl: "true"
+    mms.mail.transport: smtp
+    mms.replyToEmailAddr: admin@example.com

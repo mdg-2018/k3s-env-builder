@@ -1,0 +1,17 @@
+apiVersion: mongodb.com/v1
+kind: MongoDBUser
+metadata:
+  name: mongodb-user
+  namespace: mongodb
+spec:
+  passwordSecretKeyRef:
+  ## TODO: set the reference to the password secret you created
+    name: <reference to password secret name you created>
+    key: password
+  username: "admin"
+  db: "admin"
+  mongodbResourceRef:
+    name: "demo"
+  roles:
+  - db: "admin"
+    name: "root"

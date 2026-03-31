@@ -1,0 +1,91 @@
+- hosts: localhost
+  vars_files:
+    - config.json
+  vars:
+    vm_name: unnamed-k8s-vm
+    source_disk: /var/lib/libvirt/images/debian13-base.qcow2
+  become: true
+  tasks:
+    - name: Create a copy of the base disk image
+      command: "cp {{ source_disk }} /var/lib/libvirt/images/{{ vm_name }}.qcow2"
+      args:
+        creates: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+    - name: Create a VM
+      community.libvirt.virt_install:
+        name: "{{ vm_name }}"
+        memory: "{{ memory_size }}" 
+        vcpus: "{{ cpu_cores }}"
+        osinfo:
+          name: "{{ osinfo_name }}"
+        import: true
+        disks:
+          - path: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+        networks:
+          - network: default
+        graphics:
+          type: spice
+      register: vm_info
+    - name: Get vm ip address
+      shell: "virsh domifaddr {{ vm_name }} | awk 'NR==3{print $4}' | cut -d'/' -f1"
+      register: vm_ip
+      retries: 10
+      delay: 5
+      until: vm_ip.stdout != ""
+    - name: Register new vm as host
+      add_host:
+        name: "{{ vm_name }}"
+        ansible_host: "{{ vm_ip.stdout }}"
+        ansible_user: matt
+        group: new_vms
+      register: new_host
+    - name: Print new host info
+      debug:
+        var: new_host
+- hosts: new_vms
+  become: true
+  vars_files:
+    - config.json
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+    ansible_become_password: "{{ new_vm_root_pwd }}"
+  tasks:
+    - name: Install prerequisites
+      apt:
+        pkg:
+          - curl
+          - vim
+        update_cache: yes
+    - name: Install k9s
+      apt:
+        deb: "https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb"
+    - name: Install helm
+      shell: "curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash"
+    - name: Install k3s
+      script: k8s-lab-install_k3s.sh
+      args:
+        executable: /bin/bash
+    - name: Copy rancher default kubeconfig to home directory
+      become: true
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        remote_src: true
+        dest: /home/matt/k3s-kubeconfig.yaml
+        owner: matt
+        group: matt
+        mode: '0644'
+    - name: Copy lab files
+      copy:
+        src: k8s-lab-files/
+        dest: /home/matt/lab-files/
+        owner: matt
+        group: matt
+        mode: '0755'
+    - name: Print new vm info
+      debug:
+        msg: "New VM is accessible: ssh matt@{{ ansible_host }}"
+- hosts: localhost
+  tasks:
+    - name: Create new kubectl cluster entry
+      shell: "bash set-kubeconfig.sh {{ hostvars[vm_name].ansible_host }} {{ vm_name }}"
+
+        

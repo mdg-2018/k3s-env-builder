@@ -1,0 +1,37 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: demo
+  namespace: mongodb
+spec:
+  members: 3
+  memberConfig:
+    - priority: "2"
+    - priority: "1"
+    - priority: "1"
+  version: 8.2.3-ent
+  type: ReplicaSet
+  security:
+    authentication:
+      enabled: true
+      modes: ["SCRAM"]
+  opsManager:
+    configMapRef:
+      name: demo
+  credentials: mongodb-ops-manager-admin-key
+  persistent: true
+  podSpec:
+    podTemplate:
+      spec:
+       containers:
+        - name: mongodb-enterprise-database
+          resources:
+            limits:
+              cpu: 0.5
+              memory: 1G
+            requests:
+              cpu: 0.5
+              memory: 1G
+            persistence:
+              single:
+                storage: 10Gi

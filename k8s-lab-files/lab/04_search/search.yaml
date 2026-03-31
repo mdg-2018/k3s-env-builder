@@ -1,0 +1,14 @@
+apiVersion: mongodb.com/v1
+kind: MongoDBSearch
+metadata:
+## TODO: Name your search resource the same as your mongodb database resource. This name must be an exact match!
+  name: <make this the same name as your mongodb database resource>
+  namespace: mongodb
+spec:
+  # no need to specify source.mongodbResourceRef if MongoDBSearch CR has the same name as MongoDB CR
+  # the operator infer it automatically
+  resourceRequirements:
+    requests:
+    ## TODO: request 2 cpu cores and 3Gi of memory
+      cpu: "<request some number of cpu cores>"
+      memory: "<request some amount of memory - format should be #Gi>"

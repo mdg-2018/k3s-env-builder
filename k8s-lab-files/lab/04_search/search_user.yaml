@@ -1,0 +1,17 @@
+apiVersion: mongodb.com/v1
+kind: MongoDBUser
+metadata:
+  name: search-sync-source-user
+  namespace: mongodb
+spec:
+  passwordSecretKeyRef:
+  ## TODO: set the reference to the password secret you created
+    name: <reference to password secret name you created>
+    key: password
+  username: "search-sync-source"
+  db: "admin"
+  mongodbResourceRef:
+    name: "demo"
+  roles:
+  - db: "admin"
+    name: "searchCoordinator"
