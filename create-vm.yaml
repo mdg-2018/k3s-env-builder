@@ -51,6 +51,11 @@
     - name: Change hostname
       hostname:
         name: "{{ vm_name }}"
+    - name: Update /etc/hosts so 127.0.1.1 resolves to hostname
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.1\.1'
+        line: "127.0.1.1 {{ vm_name }}"
     - name: Install prerequisites
       apt:
         pkg:
