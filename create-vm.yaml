@@ -48,6 +48,9 @@
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_become_password: "{{ new_vm_root_pwd }}"
   tasks:
+    - name: Wait for host to be reachable
+      ansible.builtin.wait_for_connection:
+        timeout: 300
     - name: Change hostname
       hostname:
         name: "{{ vm_name }}"
