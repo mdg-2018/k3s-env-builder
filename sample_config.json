@@ -4,5 +4,6 @@
     "memory_size": 8192,
     "osinfo_name": "debian13",
     "base_image_path": "",
+    "new_images_path": "/var/lib/libvirt/images",
     "vm_name": "unnamed-k8s-vm"
 }

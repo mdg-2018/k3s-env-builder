@@ -4,11 +4,11 @@
   become: true
   tasks:
     - name: Create a copy of the base disk image
-      command: "cp {{ base_image_path }} /var/lib/libvirt/images/{{ vm_name }}.qcow2"
+      command: "cp {{ base_image_path }} {{ new_images_path }}/{{ vm_name }}.qcow2"
       args:
-        creates: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+        creates: "{{ new_images_path }}/{{ vm_name }}.qcow2"
     - name: Extend disk size
-      command: "qemu-img resize /var/lib/libvirt/images/{{ vm_name }}.qcow2 +30G"
+      command: "qemu-img resize {{ new_images_path }}/{{ vm_name }}.qcow2 +30G"
     - name: Create a VM
       community.libvirt.virt_install:
         name: "{{ vm_name }}"
@@ -18,7 +18,7 @@
           name: "{{ osinfo_name }}"
         import: true
         disks:
-          - path: "/var/lib/libvirt/images/{{ vm_name }}.qcow2"
+          - path: "{{ new_images_path }}/{{ vm_name }}.qcow2"
         networks:
           - network: default
         graphics:

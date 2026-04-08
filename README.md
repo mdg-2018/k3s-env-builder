@@ -13,3 +13,6 @@ Usage:
 - First copy ```sample_config.json``` to ```config.json```
 - Specify your base image and a password to allow ansible to become root on the remote vm
 - Run ```k8slaunch.sh myNewVmName```
+
+Warnings:
+- This edits your ```~/.kube/config``` file and very well could mess it up. Use this tool with caution.
