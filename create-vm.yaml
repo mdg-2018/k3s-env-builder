@@ -49,6 +49,11 @@
     ansible_become_password: "{{ new_vm_root_pwd }}"
     ansible_timeout: 300
   tasks:
+    - name: Update /etc/hosts with new vm info
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^127\.0\.1\.1'
+        line: "127.0.1.1 {{ vm_name }}"
     - name: Change hostname
       hostname:
         name: "{{ vm_name }}"
