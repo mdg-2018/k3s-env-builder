@@ -47,6 +47,7 @@
   vars:
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_become_password: "{{ new_vm_root_pwd }}"
+    ansible_timeout: 300
   tasks:
     - name: Change hostname
       hostname:
