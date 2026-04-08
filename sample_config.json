@@ -1,5 +1,7 @@
 {
     "new_vm_root_pwd": "",
+    "new_vm_ssh_user":"",
+    "new_vm_ssh_password":"",
     "cpu_cores": 4,
     "memory_size": 8192,
     "osinfo_name": "debian13",

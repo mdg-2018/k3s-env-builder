@@ -47,6 +47,8 @@
   vars:
     ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     ansible_become_password: "{{ new_vm_root_pwd }}"
+    ansible_user: "{{ new_vm_ssh_user }}"
+    ansible_password: "{{ new_vm_ssh_password }}"
   tasks:
     - name: Change hostname
       hostname:
