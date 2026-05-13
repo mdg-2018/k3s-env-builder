@@ -115,6 +115,13 @@
         owner: matt
         group: matt
         mode: '0755'
+    - name: Copy helper scripts
+      copy:
+        src: helper-scripts/
+        dest: /home/matt/helper-scripts/
+        owner: matt
+        group: matt
+        mode: '0755'
     - name: Print new vm info
       debug:
         msg: "New VM is accessible: ssh matt@{{ ansible_host }}"
