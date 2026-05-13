@@ -1,0 +1,11 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: test-om-db-snapshot-2
+  ## Create snapshots in same namespace as the PVC being snapshotted
+  namespace: mongodb-operator
+spec:
+  volumeSnapshotClassName: longhorn
+  source:
+    ## name of pvc to be snapshotted
+    persistentVolumeClaimName: data-ops-manager-db-2

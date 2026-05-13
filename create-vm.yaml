@@ -63,6 +63,7 @@
           - curl
           - vim
           - parted
+          - open-iscsi
         update_cache: yes
     - name: Extend an existing partition to fill all available space
       community.general.parted:
