@@ -24,12 +24,28 @@
         graphics:
           type: spice
       register: vm_info
+    - debug:
+        msg: "VM creation result: {{ vm_info }}"
     - name: Get vm ip address
       shell: "virsh domifaddr {{ vm_name }} | awk 'NR==3{print $4}' | cut -d'/' -f1"
       register: vm_ip
       retries: 10
       delay: 5
       until: vm_ip.stdout != ""
+
+    - name: Get network interface addresses for VM
+      community.libvirt.virt:
+        name: "{{ vm_name }}"
+        command: get_interfaces
+      register: vm_interfaces
+    - name: Print VM network interface addresses
+      debug:
+        var: vm_interfaces.network_interfaces.interface_1.mac
+    - name: Add a new host in the dhcp pool
+      community.libvirt.virt_net:
+        name: "{{ network_name }}"
+        command: modify
+        xml: "<host mac=\"{{ vm_interfaces.network_interfaces.interface_1.mac }}\" name=\"{{ vm_name }}\" ip=\"{{ vm_ip.stdout }}\"/>"
     - name: Register new vm as host
       add_host:
         name: "{{ vm_name }}"
