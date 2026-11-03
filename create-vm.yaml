@@ -1,6 +1,8 @@
 - hosts: localhost
   vars_files:
     - config.json
+  vars:
+    count: 1
   become: true
   tasks:
     - name: Create a copy of the base disk image
@@ -113,8 +115,12 @@
       shell: "curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash"
     - name: Install k3s
       script: k8s-lab-install_k3s.sh
+      environment:
+        JOIN_NODE: "{{ join_node }}"
+        K3S_TOKEN: "{{ k3s_token }}"
       args:
         executable: /bin/bash
+
     - name: Copy rancher default kubeconfig to home directory
       become: true
       copy:

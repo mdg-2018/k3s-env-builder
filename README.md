@@ -9,6 +9,11 @@ Requirements:
 - You'll need to provide your own base image in the config file
 - You'll need ansible installed along with the ansible libvirt package
 
+Dependencies:
+```shell
+
+```
+
 Usage:
 - First copy ```sample_config.json``` to ```config.json```
 - Specify your base image and a password to allow ansible to become root on the remote vm
