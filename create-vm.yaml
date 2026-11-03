@@ -122,6 +122,7 @@
         executable: /bin/bash
 
     - name: Copy rancher default kubeconfig to home directory
+      when: join_node | default('') | length == 0
       become: true
       copy:
         src: /etc/rancher/k3s/k3s.yaml
@@ -130,6 +131,7 @@
         owner: matt
         group: matt
         mode: '0644'
+      
     - name: Copy lab files
       copy:
         src: k8s-lab-files/
